@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes,Op } = require("sequelize");
-const sequelize = new Sequelize("Admin", "root", "Toor!!!123", {
-  host: "localhost",
-  dialect: "mysql",
-});
+// const { Sequelize, DataTypes,Op } = require("sequelize");
+// const sequelize = new Sequelize("Admin", "root", "Toor!!!123", {
+//   host: "localhost",
+//   dialect: "mysql",
+// });
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -12,31 +12,9 @@ app.use(express.json())
 app.use(cors({
     origin: '*'
 }));
-app.use((req,res,next)=>{
-  
-    res.setHeader('Access-Control-Allow-Methods','*');
-    next(); 
-})
-const Users = sequelize.define("users", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName:{
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      // unique: true,
-    },
-  },{timestamps:false});
+const sequelize = require('./userDb');
+const Users = require('./model')(sequelize);
+
 
   app.get('/users',async(req,res )=>{
     try {
@@ -57,6 +35,23 @@ app.post('/addUser',async(req,res)=>{
     }catch (err){
             console.error(err);
             res.send("errorr")
+    }
+})
+
+app.delete('/userDeleted/:id',async(req,res)=>{
+  const userId = req.params.id;
+    try {
+      console.log(userId);
+      let data = await Users.destroy({
+        where: {
+          id: userId
+        }
+      });
+      console.log('User deleted successfully');
+      res.status(200).json({message:'User deleted successfully',data});
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err.message);
     }
 })
 app.listen(5400)
