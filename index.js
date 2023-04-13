@@ -14,7 +14,17 @@ app.use(cors({
 }));
 const sequelize = require('./userDb');
 const Users = require('./model')(sequelize);
+// const Admins= require('./adminDb')(sequelize)
 
+const adminControl= require('./controlers/adminControl')
+app.use('/admin', adminControl);
+// sequelize.sync()
+//   .then(() => {
+//     console.log('Database synchronized');
+//   })
+//   .catch((err) => {
+//     console.error('Error synchronizing database:', err);
+//   });
 
   app.get('/users',async(req,res )=>{
     try {
