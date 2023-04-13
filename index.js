@@ -14,10 +14,11 @@ app.use(cors({
 }));
 const sequelize = require('./userDb');
 const Users = require('./model')(sequelize);
-// const Admins= require('./adminDb')(sequelize)
+const Admins= require('./adminDb')(sequelize)
 
 const adminControl= require('./controlers/adminControl')
 app.use('/admin', adminControl);
+// const Admins= require('./adminDb')(sequelize)
 // sequelize.sync()
 //   .then(() => {
 //     console.log('Database synchronized');
@@ -36,6 +37,13 @@ app.use('/admin', adminControl);
                 res.status(500).send("ERROR BRO");
               }
 })
+
+app.get('/home',async(req,res)=>{
+    const allUsers= await Users.findAll({})
+    const adminsAll = await Admins.findAll({})
+    res.send({admins:adminsAll,users:allUsers})
+})
+
 app.post('/addUser',async(req,res)=>{
     const {firstName,lastName,email } = req.body;
     // console.log(req.body);
