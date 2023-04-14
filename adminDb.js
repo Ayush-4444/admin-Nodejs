@@ -16,8 +16,11 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull:false,
         unique: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   }, { timestamps: false });
-  
   return Admins;
 };
