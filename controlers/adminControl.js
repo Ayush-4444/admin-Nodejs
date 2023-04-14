@@ -27,8 +27,10 @@ router.post('/login',async(req,res)=>{
     //     res.send("errorr")
     // }
     const user = await Admins.findOne({ where: { email } });
+    console.log('--',user,'--');
     if (user !== null) {
       const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log(passwordMatch,'matched');
       if (passwordMatch) {
         res.status(200).send({ user: user, message: 'Login Success' });
       } else {
@@ -44,14 +46,14 @@ router.post('/login',async(req,res)=>{
 })
 
 router.post('/insert',async(req,res)=>{
-    const {email,password } = req.body;
+    const {email,password,name } = req.body;
     try{   
          const userExists = await Admins.findOne({ where: { email: email } });
          if (userExists) {
-           return res.status(400).send({ message: 'Email already registered' });
+           return res.send({ status:300,message: 'Email already registered' });
            }
         const hashedPassword = await bcrypt.hash(password, saltRounds); 
-        const newUsers= await Admins.create({email,password: hashedPassword })
+        const newUsers= await Admins.create({email,password: hashedPassword,name })
         console.log(newUsers);
         res.send(newUsers);
 }catch (err){

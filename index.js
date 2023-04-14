@@ -15,7 +15,7 @@ app.use(cors({
 const sequelize = require('./userDb');
 const Users = require('./model')(sequelize);
 const Admins= require('./adminDb')(sequelize)
-
+const { Op } = require("sequelize");
 const adminControl= require('./controlers/adminControl')
 app.use('/admin', adminControl);
 // const Admins= require('./adminDb')(sequelize)
@@ -29,9 +29,17 @@ app.use('/admin', adminControl);
 
   app.get('/users',async(req,res )=>{
     try {
-        const newUsers= await Users.findAll({})
-        res.setHeader('Access-Control-Allow-Methods','*');
-        res.send({users:newUsers});
+      const { search } = req.query;
+      console.log('searching for users with search term:', search);
+      let where = {};
+      if (search) {
+        where[Op.or] = [
+          { firstName: { [Op.like]: `%${search}%` } },
+          { lastName: { [Op.like]: `%${search}%` } }
+        ];
+      }
+      const newUsers = await Users.findAll({ where });
+      res.send({ users: newUsers });
     }catch (err) {
                 console.error(err);
                 res.status(500).send("ERROR BRO");
@@ -46,9 +54,12 @@ app.get('/home',async(req,res)=>{
 
 app.post('/addUser',async(req,res)=>{
     const {firstName,lastName,email } = req.body;
-    // console.log(req.body);
+    // console.log(req.body.email,"=================",req.email);
+    let user = req.body
+    console.log(user);
     try{    
-      const userExist= await Users.findOne({email:req.email})
+      const userExist = await Users.findOne({ where: { email: req.body.email } });
+      console.log(userExist,"exiiittteeedd user++++++++++++");
             if(userExist){
               return res.send({ message: 'Email already registered',status:300 });
             }
