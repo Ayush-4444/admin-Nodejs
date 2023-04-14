@@ -46,6 +46,10 @@ router.post('/login',async(req,res)=>{
 router.post('/insert',async(req,res)=>{
     const {email,password } = req.body;
     try{   
+         const userExists = await Admins.findOne({ where: { email: email } });
+         if (userExists) {
+           return res.status(400).send({ message: 'Email already registered' });
+           }
         const hashedPassword = await bcrypt.hash(password, saltRounds); 
         const newUsers= await Admins.create({email,password: hashedPassword })
         console.log(newUsers);

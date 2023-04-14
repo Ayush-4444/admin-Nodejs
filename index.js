@@ -48,6 +48,10 @@ app.post('/addUser',async(req,res)=>{
     const {firstName,lastName,email } = req.body;
     // console.log(req.body);
     try{    
+      const userExist= await Users.findOne({email:req.email})
+            if(userExist){
+              return res.send({ message: 'Email already registered',status:300 });
+            }
             const newUsers= await Users.create({firstName,lastName,email})
             res.send(newUsers);
     }catch (err){
