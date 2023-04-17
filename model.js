@@ -20,7 +20,14 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true,
     },
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    },
   }, { timestamps: false });
-
+  // sequelize.sync({
+  //     alter:true
+  //   });
   return Users;
 };

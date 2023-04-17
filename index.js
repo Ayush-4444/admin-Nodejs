@@ -107,17 +107,18 @@ app.get('/home', async (req, res) => {
 })
 
 app.post('/addUser', async (req, res) => {
-  const { firstName, lastName, email } = req.body;
+  const { firstName, lastName, email,status } = req.body;
   // console.log(req.body.email,"=================",req.email);
   let user = req.body
   console.log(user);
   try {
+    console.log(user);
     const userExist = await Users.findOne({ where: { email: req.body.email } });
     console.log(userExist, "exiiittteeedd user++++++++++++");
     if (userExist) {
       return res.send({ message: 'Email already registered', status: 300 });
     }
-    const newUsers = await Users.create({ firstName, lastName, email })
+    const newUsers = await Users.create({ firstName, lastName, email,status })
     res.send(newUsers);
   } catch (err) {
     console.error(err);
@@ -141,4 +142,5 @@ app.delete('/userDeleted/:id', async (req, res) => {
     res.status(500).send(err.message);
   }
 })
-app.listen(6400)
+
+app.listen(5600)
