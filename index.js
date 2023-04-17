@@ -29,8 +29,8 @@ app.use('/admin', adminControl);
 
   app.get('/users',async(req,res )=>{
     try {
-      const { search } = req.query;
-      console.log('searching for users with search term:', search);
+      const { search,order,orderBy } = req.query;
+      console.log('searching for users with search term:', req.query);
       let where = {};
       if (search) {
         where[Op.or] = [
@@ -38,8 +38,9 @@ app.use('/admin', adminControl);
           { lastName: { [Op.like]: `%${search}%` } }
         ];
       }
-      const newUsers = await Users.findAll({ where });
-      res.send({ users: newUsers });
+      const orderByClause = order && orderBy ? [[order, orderBy]] : [];
+      const newUsers = await Users.findAll({ where, order: orderByClause });
+    res.send({ users: newUsers });
     }catch (err) {
                 console.error(err);
                 res.status(500).send("ERROR BRO");
@@ -87,4 +88,4 @@ app.delete('/userDeleted/:id',async(req,res)=>{
       res.status(500).send(err.message);
     }
 })
-app.listen(5400)
+app.listen(5600)

@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-
+const { Op, Sequelize } = require('sequelize');
 module.exports = (sequelize) => {
   const Users = sequelize.define('users', {
     id: {
@@ -8,11 +8,11 @@ module.exports = (sequelize) => {
       autoIncrement: true,
     },
     firstName: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
     },
     lastName: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
     },
     email: {
