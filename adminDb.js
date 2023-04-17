@@ -22,5 +22,11 @@ module.exports = (sequelize) => {
       allowNull: true,
     }
   }, { timestamps: false });
+
+  // sequelize.sync({
+  //   alter:true
+  // });
+ 
   return Admins;
 };
+
